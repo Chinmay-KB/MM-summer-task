@@ -1,18 +1,26 @@
 package mm.kb.com.mondaymorning;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,10 +55,20 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Adding tabs to the tabLayout
         final TabLayout tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("THIS WEEK"), 0);
-        tabLayout.addTab(tabLayout.newTab().setText("CATEGORIES"), 1);
+        //tabLayout.addTab(tabLayout.newTab().setText("THIS WEEK"), 0);
+        //tabLayout.addTab(tabLayout.newTab().setText("CATEGORIES"), 1);
         setAppBarHeight();
         initInstances();
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        //Iterating over all tabs to set custom view
+        for(int i=0;i<tabLayout.getTabCount();i++)
+        {
+            TabLayout.Tab tab=tabLayout.getTabAt(i);
+            tab.setCustomView(pagerAdapter.getTabView(i));
+        }
     }
     public void loginScreen(View view)
     {
@@ -144,5 +163,47 @@ public class MainActivity extends AppCompatActivity {
                 .getDisplayMetrics()
                 .density;
         return Math.round((float) dp * density);
+    }
+    class PagerAdapter extends FragmentPagerAdapter {
+
+        String tabTitles[] = new String[] { "THIS WEEK", "CATEGORIES"};
+        Context context;
+
+        public PagerAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+                    return new BlankFragment();
+                case 1:
+                    return new BlankFragment();
+            }
+
+            return null;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            // Generate title based on item position
+            return tabTitles[position];
+        }
+
+        public View getTabView(int position) {
+            View tab = LayoutInflater.from(MainActivity.this).inflate(R.layout.custom_tab, null);
+            TextView tv = (TextView) tab.findViewById(R.id.custom_text);
+            tv.setText(tabTitles[position]);
+            return tab;
+        }
+
     }
 }
