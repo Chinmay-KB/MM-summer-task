@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //Setting up the appbar
         mToolbar = findViewById(R.id.toolbar);
+        int resId=R.anim.layout_animation_fall_down;
+        LayoutAnimationController animation= AnimationUtils.loadLayoutAnimation(this,resId);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
