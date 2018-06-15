@@ -13,6 +13,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +21,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle drawerToggle;
     NavigationView navigation;
-
+    LinearLayout viewCategoryNames;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +108,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void buildCategoryScroll() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 0, 5, 0);
+
+        for (int i = 1; i <= 15; i++) {
+            final Button btCategory = new Button(MyContext.getContext());
+            btCategory.setText(String.valueOf(i));
+            btCategory.setTextSize(16f);
+            btCategory.setWidth(width/3);
+            btCategory.setAllCaps(false);
+            btCategory.setBackgroundColor(ContextCompat.getColor(MyContext.getContext(), R.color.categoriesButton));
+            btCategory.setTextColor(ContextCompat.getColor(MyContext.getContext(), android.R.color.white));
+            btCategory.setLayoutParams(layoutParams);
+            btCategory.setTag(i);
+            viewCategoryNames.addView(btCategory);
+        }
+    }
+
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -152,31 +178,77 @@ public class MainActivity extends AppCompatActivity {
         return Math.round((float) dp * density);
     }
     class PagerAdapter extends FragmentPagerAdapter {
-
+        LinearLayout viewCategoryNames;
         String tabTitles[] = new String[] { "THIS WEEK", "CATEGORIES"};
         Context context;
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
+
+
         }
 
         @Override
         public int getCount() {
             return 2;
         }
-
+         Button btCategory = new Button(MyContext.getContext());
         @Override
         public Fragment getItem(int position) {
 
-            switch (position) {
-                case 0:
+            if(position==0)
+             {     // viewCategoryNames.removeAllViewsInLayout();
+                 //buildCategoryScrolls();
                     return new BlankFragment();
-                case 1:
-                    return new BlankFragment();
+                }
+             else
+            {  //viewCategoryNames.removeAllViewsInLayout();
+                //buildCategoryScrolls();
+            return new CrankFragment();
             }
+        }
+        public void buildCategoryScroll() {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+            int width = displayMetrics.widthPixels;
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 0, 5, 0);
 
-            return null;
+            for (int i = 1; i <= 3; i++) {
+
+                btCategory.setText(String.valueOf(i));
+                btCategory.setTextSize(16f);
+                btCategory.setWidth(width/3);
+                btCategory.setAllCaps(false);
+                btCategory.setBackgroundColor(ContextCompat.getColor(MyContext.getContext(), R.color.categoriesButton));
+                btCategory.setTextColor(ContextCompat.getColor(MyContext.getContext(), android.R.color.white));
+                btCategory.setLayoutParams(layoutParams);
+                btCategory.setTag(i);
+                viewCategoryNames.addView(btCategory);
+            }
+        }
+        public void buildCategoryScrolls() {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+            int width = displayMetrics.widthPixels;
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 0, 5, 0);
+
+            for (int i = 1; i <= 6; i++) {
+                //final Button btCategory = new Button(MyContext.getContext());
+                btCategory.setText(String.valueOf(i));
+                btCategory.setTextSize(16f);
+                btCategory.setWidth(width/4);
+                btCategory.setAllCaps(false);
+                btCategory.setBackgroundColor(ContextCompat.getColor(MyContext.getContext(), R.color.categoriesButton));
+                btCategory.setTextColor(ContextCompat.getColor(MyContext.getContext(), android.R.color.white));
+                btCategory.setLayoutParams(layoutParams);
+                btCategory.setTag(i);
+                viewCategoryNames.addView(btCategory);
+            }
         }
 
         @Override

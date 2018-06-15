@@ -1,21 +1,27 @@
 package mm.kb.com.mondaymorning;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;;import java.util.ArrayList;
+import android.view.animation.LayoutAnimationController;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class BlankFragment extends Fragment {
+;
 
-    public BlankFragment() {
+public class CrankFragment extends Fragment {
+    LinearLayout viewCategoryNames;
+    public CrankFragment() {
         // Required empty public constructor
     }
     List<String> namesList = new ArrayList<>();
@@ -29,7 +35,7 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_1, container, false);
 
         RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         rv.setHasFixedSize(true);
@@ -42,6 +48,7 @@ public class BlankFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
         runLayoutAnimation(rv);
+
 
         return rootView;
 
