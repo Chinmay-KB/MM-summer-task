@@ -1,20 +1,32 @@
 package mm.kb.com.mondaymorning;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;;import java.util.ArrayList;
+import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;;import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BlankFragment extends Fragment {
 
+    private ProgressDialog pDialog;
+    private static String url="http://mondaymorning.nitrkl.ac.in/api/post/get/featured";
+    ArrayList<HashMap<String, String>> titleList;
     public BlankFragment() {
         // Required empty public constructor
     }
@@ -22,7 +34,7 @@ public class BlankFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        titleList=new ArrayList<>();
     }
 
     @Override
@@ -56,6 +68,5 @@ public class BlankFragment extends Fragment {
         recyclerView.getAdapter().notifyDataSetChanged();
         recyclerView.scheduleLayoutAnimation();
     }
-
 
 }
