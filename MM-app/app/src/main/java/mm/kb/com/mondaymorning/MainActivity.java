@@ -1,5 +1,6 @@
 package mm.kb.com.mondaymorning;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -35,6 +36,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     Typeface typeface;
@@ -45,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle drawerToggle;
     NavigationView navigation;
     LinearLayout viewCategoryNames;
+    private String url = "http://mondaymorning.nitrkl.ac.in/api/post/get/featured";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     {
         startActivity(new Intent(this,Login.class));
     }
+
     private void initInstances() {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -205,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
              else
             {  //viewCategoryNames.removeAllViewsInLayout();
                 //buildCategoryScrolls();
-            return new CrankFragment();
+            return new BlankFragment();
             }
         }
         public void buildCategoryScroll() {

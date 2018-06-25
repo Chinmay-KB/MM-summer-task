@@ -14,7 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Toast;;import org.json.JSONArray;
+import android.widget.Toast;;import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +34,9 @@ public class BlankFragment extends Fragment {
     private ProgressDialog pDialog;
     private static String url="http://mondaymorning.nitrkl.ac.in/api/post/get/featured";
     ArrayList<HashMap<String, String>> titleList;
+    private static final String DATA_URL_ALLNEWS = "http://mondaymorning.nitrkl.ac.in/api/post/get/thisweek";
+    private List<AllNewsData> listItems;
+
     public BlankFragment() {
         // Required empty public constructor
     }
@@ -42,21 +52,77 @@ public class BlankFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
-
         RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         rv.setHasFixedSize(true);
         String list[] = new String[25];
         for (int i = 0; i < 19; i++)
             namesList.add("Article Title Here");
-        RVAdapter adapter = new RVAdapter(namesList);
-        rv.setAdapter(adapter);
+        listItems = new ArrayList<>();
+        loadRecyclerViewData();
+
+        RVAdapter adapter = new RVAdapter(getContext(),listItems);
+
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(llm);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.setAdapter(adapter);
         runLayoutAnimation(rv);
-
         return rootView;
 
+    }
+    private void loadRecyclerViewData() {
+
+        StringRequest request = new StringRequest(Request.Method.GET, DATA_URL_ALLNEWS, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    JSONArray arr = obj.getJSONArray("posts");
+                    String authors[] = new String[arr.length()];
+                    String categories[] = new String[arr.length()];
+                    for (int i = 0; i < arr.length(); ++i) {
+                        JSONObject o = arr.getJSONObject(i);
+
+                        AllNewsData data = new AllNewsData(
+                                o.getString("post_title"),
+                                //o.getJSONArray("authors").toString(),
+                                getAuthors(o),
+                                o.getString("post_publish_date"),
+                                o.getString("featured_image"));
+                        listItems.add(data);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+
+            }
+        });
+
+        RequestQueue rq = Volley.newRequestQueue(getContext());
+        rq.add(request);
+
+
+    }
+    public String getAuthors(JSONObject jo) {
+
+        String str = "";
+        try {
+            JSONArray arr_auth = jo.getJSONArray("authors");
+            for (int i = 0; i < arr_auth.length(); ++i) {
+                if (i == arr_auth.length() - 1)
+                    str += arr_auth.get(i);
+                else
+                    str += arr_auth.get(i) + ",";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
